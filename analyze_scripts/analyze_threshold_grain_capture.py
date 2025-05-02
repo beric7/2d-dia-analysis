@@ -10,7 +10,6 @@ from utils.json_grains_2_coco_json import list_files_full_path, convert_to_coco
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from calculate_sieve_results import get_results
-from utils.json_grains_2_coco_json import plot_data
 
 def process_file(file, img_dir, save_grain_dir, pixel2mm, json_save_dir):
     filepath = os.path.join(img_dir, file)
