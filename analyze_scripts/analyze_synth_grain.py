@@ -1,9 +1,9 @@
 import argparse
 import os
 import pandas as pd
-from position_priors import load_json_data, get_gsd, get_percent_passing, get_curve
+from contour_characteristics import load_json_data, get_gsd, get_percent_passing, get_curve
 from process_amodal_predictions import process_annotations
-from json_grains_2_coco_json import plot_data
+from ..utils.json_grains_2_coco_json import plot_data
 
 def main():
     # Parse command-line arguments

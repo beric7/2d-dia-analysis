@@ -3,10 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 import pandas as pd
-from grain_analysis import compute_volume
-from position_priors import trim_contour, fill_contour
 import feret
-
+from tqdm import tqdm
+import os
+from scipy.stats import mode
 
 def template_matching(image1, image2):
     """
@@ -164,7 +164,7 @@ def match_with_vertical_priority(centroids1, centroids2, reverse=False):
                                 'area2': area2,
                                 'area_diff': (area1 - best_match[2]),
                                 'vol_diff': (vol1 - best_match[3]),
-                                'fmin_dff': (fmin1 - best_match[4]),
+                                'fmin_diff': (fmin1 - best_match[4]),
                                 'fmin1': fmin1,
                                 'fmin2': fmin2})
             else: 
@@ -176,7 +176,7 @@ def match_with_vertical_priority(centroids1, centroids2, reverse=False):
                                 'area1': area1,
                                 'area2': area2,
                                 'vol_diff': (vol1 - best_match[3]),
-                                'fmin_dff': (fmin1 - best_match[4]),
+                                'fmin_diff': (fmin1 - best_match[4]),
                                 'fmin1': fmin1,
                                 'fmin2': fmin2})
     return matched
@@ -383,12 +383,14 @@ def visualize_tracking_with_color_scale_full_img(image1, image2, match_metadata,
     plt.axis("off")
     plt.savefig('Colorscale Tracking.png')
 
-def analyze_and_plot_weighted_distances(matches):
+def analyze_and_plot_weighted_distances(matches, save_dir, exp_name):
     """
-    Analyze weighted distances for all matches and plot a histogram.
+    Analyze weighted distances for all matches, plot histograms, and display statistics.
 
     Args:
-        matches (list): List of matched centroid pairs [(x1, y1, x2, y2), ...].
+        matches (list): List of matched centroid pairs with metadata.
+        save_dir (str): Directory to save the plots.
+        exp_name (str): Experiment name for file naming.
 
     Returns:
         None
@@ -398,59 +400,70 @@ def analyze_and_plot_weighted_distances(matches):
     v_dist = []
     h_dist = []
     for i, match in enumerate(matches):
-        # (x1, y1, x2, y2) = match['biased_score']
         weighted_score = match['biased_score']
         v = match['v_dist']
-    
-        # euclidean_distance = np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-        
-        # Introduce vertical bias: penalize horizontal displacement
-        # vertical_bias = abs(x2 - x1) * 2  # Weight horizontal distance more heavily
-        
-        # Combine distance and bias into a weighted score
-        # weighted_score = euclidean_distance + vertical_bias
-        # if x1 < x2:  # Normal match (frame1 -> frame2)
-        #     match_id = f"N{i+1}"  # Normal match ID
-        # else:  # Reversed match (frame2 -> frame1)
-        #     match_id = f"R{i+1}"  # Reversed match ID
+        h = match['h_dist']
         
         # Save metadata
         v_dist.append(v)
+        h_dist.append(h)
         weighted_scores.append(weighted_score)
-        # match_metadata.append((match_id, weighted_score))
 
-    # Sort distances in descending order
-    # match_metadata_sorted = sorted(match_metadata, key=lambda x: x[1], reverse=True)
+    # Function to plot histogram with statistics
+    def plot_histogram_with_statistics(data, bins, title, xlabel, ylabel, filename):
+        plt.figure(figsize=(10, 6))
+        bin_counts, bin_edges, patches = plt.hist(data, bins=bins, color='blue', alpha=0.7, edgecolor='black')
+        plt.title(title, fontsize=16)
+        plt.xlabel(xlabel, fontsize=14)
+        plt.ylabel(ylabel, fontsize=14)
+        plt.grid(True, linestyle='--', alpha=0.6)
 
-    # Print vertical distances with IDs in descending order
-    # print("Weighted Distances (Descending Order):")
-    # for match_id, distance in match_metadata_sorted:
-    #     print(f"{match_id}: {distance}")
+        # Calculate statistics
+        mean = np.mean(data)
+        median = np.median(data)
+        variance = np.var(data)
+        std_dev = np.std(data)
+        mode_value = mode(data).mode[0]
+        mode_count = mode(data).count[0]
 
-    # Plot histogram
-    plt.figure(figsize=(10, 6))
-    plt.hist(weighted_scores, bins=20, color='blue', alpha=0.7, edgecolor='black')
-    plt.title("Histogram of Weighted Distances for Matches", fontsize=16)
-    plt.xlabel("Weighted Distance", fontsize=14)
-    plt.ylabel("Frequency", fontsize=14)
-    plt.grid(True, linestyle='--', alpha=0.6)
-    plt.savefig('Histogram_weighted_matches.png')
+        # Display statistics below the histogram
+        stats_text = (
+            f"Mean: {mean:.2f}\n"
+            f"Median: {median:.2f}\n"
+            f"Variance: {variance:.2f}\n"
+            f"Std Dev: {std_dev:.2f}\n"
+            f"Mode: {mode_value:.2f} (Count: {mode_count})"
+        )
+        plt.gcf().text(0.85, 0.85, stats_text, fontsize=12, va='top', ha='right', bbox=dict(facecolor='white', alpha=0.8))
 
-    plt.figure(figsize=(10, 6))
-    plt.hist(v_dist, bins=15, color='blue', alpha=0.7, edgecolor='black')
-    plt.title("Histogram of vertical Distances for Matches", fontsize=16)
-    plt.xlabel("Vertical Distance", fontsize=14)
-    plt.ylabel("Frequency", fontsize=14)
-    plt.grid(True, linestyle='--', alpha=0.6)
-    plt.savefig('Histogram_vertical_dist_matches.png')
+        # Save the plot
+        plt.savefig(filename)
+        plt.close()
 
-    plt.figure(figsize=(10, 6))
-    plt.hist(h_dist, bins=15, color='blue', alpha=0.7, edgecolor='black')
-    plt.title("Histogram of horizontal Distances for Matches", fontsize=16)
-    plt.xlabel("Horizontal Distance", fontsize=14)
-    plt.ylabel("Frequency", fontsize=14)
-    plt.grid(True, linestyle='--', alpha=0.6)
-    plt.savefig('Histogram_horizontal_dist_matches.png')
+    # Plot and save histograms
+    plot_histogram_with_statistics(
+        weighted_scores, bins=41,
+        title="Histogram of Weighted Distances for Matches",
+        xlabel="Weighted Distance",
+        ylabel="Frequency",
+        filename=f'{save_dir}/{exp_name}_Histogram_weighted_matches.png'
+    )
+
+    plot_histogram_with_statistics(
+        v_dist, bins=41,
+        title="Histogram of Vertical Distances for Matches",
+        xlabel="Vertical Distance",
+        ylabel="Frequency",
+        filename=f'{save_dir}/{exp_name}_Histogram_vertical_dist_matches.png'
+    )
+
+    plot_histogram_with_statistics(
+        h_dist, bins=41,
+        title="Histogram of Horizontal Distances for Matches",
+        xlabel="Horizontal Distance",
+        ylabel="Frequency",
+        filename=f'{save_dir}/{exp_name}_Histogram_horizontal_dist_matches.png'
+    )
 
 def remove_outliers_iqr(data):
     """
@@ -534,7 +547,7 @@ def get_metadata(matches, offset):
             "v_dist": (full_scale_centroid[1]-full_scale_centroid[3]),
             'area_diff': match['area_diff'],
             'vol_diff': match['vol_diff'],
-            'fmin_dff': match['fmin_dff'],
+            'fmin_diff': match['fmin_diff'],
             'area1': match['area1'],
             'area2': match['area2'],
             'fmin1': match['fmin1'],
@@ -1012,10 +1025,6 @@ def visualize_tracking_three_frames_side_by_side(image1, image2, image3, match_m
     plt.savefig(output_path)
     print(f"Tracking visualization saved to {output_path}")
 
-from tqdm import tqdm
-import os
-# example()
-# metrics_example()
 def image_pair_metrics(image1_path, image2_path):
     """
     Compute metrics for a pair of images and return filtered matches.
@@ -1111,11 +1120,6 @@ def loop_metrics(input_dir, depth=3, output_path="filtered_matches.csv"):
     df.to_csv(output_path, index=False)
 
     print(f"Metrics saved to {output_path}")
-
-# # Example usage
-# input_directory = "/projects/OLIVINE/data/input_device/Oryx/oryx/olivine/olivine_60_144fps_subset/"
-# # loop_metrics(input_directory, depth=3, output_path="filtered_matches_complete.csv")
-# loop_metrics_(input_directory, output_path="filtered_matches_complete_2.csv")
 
 def track_particles_across_frames(frames, threshold=150, overlap_ratio=0.75):
     """

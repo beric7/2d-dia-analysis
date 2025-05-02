@@ -15,8 +15,6 @@ echo "Job Account: "$SLURM_JOB_ACCOUNT
 echo "Hosts: "$SLURM_NODELIST
 echo "------------"
 
-# pixel_2_mm=0.0057537
-# pixel_2_mm=0.00493177
 pixel_2_mm=0.00493177
 img_dir='/projects/OLIVINE/data/input_device/Oryx/oryx/venice/venice_all_long1_144fps'
 save_dir='/projects/OLIVINE/data/output/PARTICLE/Otsu/oryx/venice_long1/'
@@ -25,6 +23,6 @@ exp='venice_beach_long1'
 echo "Pixel Ratio: "$pixel_2_mm
 echo "save_dir: "$save_dir
 
-source /projects/OLIVINE/environments/SAM-grain/bin/activate
+$(poetry env activate)
 
-python3 -m process_threshold_grain_capture --img_dir $img_dir --save_dir $save_dir --pixel2mm $pixel_2_mm --sand_name $sand --exp $exp
+python3 -m analyze_threshold_grain_capture --img_dir $img_dir --save_dir $save_dir --pixel2mm $pixel_2_mm --sand_name $sand --exp $exp

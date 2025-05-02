@@ -2,10 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from utils.load_json import load_json_data 
-
 # Amodal Analysis
-from scipy.integrate import trapz  # For numerical integration
+from scipy.integrate import trapezoid   # For numerical integration
 from scipy.stats import norm  # For Z-scores
 
 # ################################################
@@ -275,7 +273,7 @@ def calculate_area_error(ground_truth_df, experiment_df, experiment_name):
     errors = [abs(gt - pred) / gt for gt, pred, in zip(ground_truth_df['ground truth size'], experiment_df[experiment_name])]
     print(errors)
     # Calculate the absolute area between the curves (error)
-    absolute_area_error = trapz(np.abs(ground_truth_interp - experiment_interp), sizes)
+    absolute_area_error = trapezoid(np.abs(ground_truth_interp - experiment_interp), sizes)
     
     return absolute_area_error, errors
 
@@ -383,4 +381,102 @@ def plot_experiment_data(directory, ground_truth_file, save_dir):
     
     return error_df
 
+
+# ################################################
+# Multi-frame particle characteristics
+# ################################################
+def plot_multiframe_data(matches, save_dir, exp_name, filter=200):
+    # Step 1: Filter entries with 'score' < 100
+    filtered_data = [entry for entry in matches if entry['score'] < filter]
+    print(len(filtered_data))
+    print(len(matches))
+
+    # Step 2: Extract values for variance computation
+    area_diff_values = [entry['area_diff'] for entry in filtered_data]
+    vol_diff_values = [entry['vol_diff'] for entry in filtered_data]
+    fmin_diff_values = [entry['fmin_diff'] for entry in filtered_data]
+
+    # Compute variance
+    area_diff_variance = np.var(area_diff_values)
+    vol_diff_variance = np.var(vol_diff_values)
+    fmin_diff_variance = np.var(fmin_diff_values)
+
+    # Compute Sum
+    area_diff_av = np.average(area_diff_values)
+    vol_diff_av = np.average(vol_diff_values)
+    fmin_diff_av = np.average(fmin_diff_values)
+
+    # Compute min
+    area_diff_min = np.min(area_diff_values)
+    vol_diff_min = np.min(vol_diff_values)
+    fmin_diff_min = np.min(fmin_diff_values)
+
+    # Step 3: Analyze size variation with matches (plotting)
+    scores = [entry['score'] for entry in filtered_data]
+    fmin_diff_variance
+
+    area1 = [entry['area1'] for entry in filtered_data]
+    area_diff = [entry['area_diff'] for entry in filtered_data]
+    fmin1 = [entry['fmin1'] for entry in filtered_data]
+    fmin2 = [entry['fmin2'] for entry in filtered_data]
+    fmin_diff = [entry['fmin_diff'] for entry in filtered_data]
+
+    # Calculate percentage change between fmin1_size and fmin2_size
+    percentage_change = [((fmin2_ - fmin1_) / fmin1_) * 100 for fmin1_, fmin2_ in zip(fmin1, fmin2)]
+
+    # Plot area_diff vs score
+    plt.figure(figsize=(10, 5))
+    plt.scatter(scores, area_diff_values, color='purple')
+    plt.xlabel('Score')
+    plt.ylabel('area_diff_values')
+    plt.title('Area Difference vs Score')
+    plt.grid()
+    plt.savefig(f'{save_dir}/{exp_name}_area_difference_v_score.png')
+
+    # Plot area_diff vs score
+    plt.figure(figsize=(10, 5))
+    plt.scatter(scores, vol_diff_values, color='green')
+    plt.xlabel('Score')
+    plt.ylabel('vol_diff_values')
+    plt.title('Volume Difference vs Score')
+    plt.grid()
+    plt.savefig(f'{save_dir}/{exp_name}_vol_diff_values_v_score.png')
+
+    # Plot area_diff vs fmin_diff_values
+    plt.figure(figsize=(10, 5))
+    plt.scatter(scores, fmin_diff_values, color='blue')
+    plt.xlabel('Score')
+    plt.ylabel('fmin_diff_values')
+    plt.title('Fmin Difference vs Score')
+    plt.grid()
+    plt.savefig(f'{save_dir}/{exp_name}_fmin_diff_v_scores.png')
+
+    # Scatter plot for area1_size vs area_difference
+    plt.figure(figsize=(8, 6))
+    plt.scatter(area1, area_diff, color='purple')
+    plt.xlabel('Area1 Size')
+    plt.ylabel('Area Difference')
+    plt.title('Area1 Size vs Area Difference')
+    plt.grid(True)
+    plt.savefig(f'{save_dir}/{exp_name}_area1_size_v_area_difference.png')
+
+    # Scatter plot for fmin1_size vs fmin_difference
+    plt.figure(figsize=(8, 6))
+    plt.scatter(fmin1, fmin_diff, color='blue', label='Fmin Difference')
+    plt.xlabel('Fmin1 Size')
+    plt.ylabel('Fmin Difference')
+    plt.title('Fmin1 Size vs Fmin Difference')
+    plt.grid(True)
+    plt.savefig(f'{save_dir}/{exp_name}_fmin1_v_difference_fmin1.png')
+
+    # Scatter plot for fmin1_size vs percentage change
+    plt.figure(figsize=(8, 6))
+    plt.scatter(fmin1, percentage_change, color='red', label='Fmin perc change')
+    plt.xlabel('Fmin1 Size')
+    plt.ylabel('Fmin Percent Change')
+    plt.title('Fmin1 Size vs Fmin Percent Change')
+    plt.grid(True)
+    plt.savefig(f'{save_dir}/{exp_name}_fmin1_v_perc_change_fmin1.png')
+
+ 
 

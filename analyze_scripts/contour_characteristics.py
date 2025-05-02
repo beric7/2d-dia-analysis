@@ -6,7 +6,6 @@ import pandas as pd
 from utils.dce import dce_area
 import feret
 import time
-from utils.smallestenclosingcircle import smallestenclosingcircle as sec
 from utils.load_json import load_json_data 
 import json
 

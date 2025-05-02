@@ -1,0 +1,23 @@
+[project]
+name = "2d-dia-analysis"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Dr. Eric Bianchi",email = "ebianchi@mitre.org"}
+]
+readme = "README.md"
+requires-python = ">=3.10,<4"
+dependencies = [
+    "opencv-python (>=4.11.0.86,<5.0.0.0)",
+    "feret (>=1.3.1,<2.0.0)",
+    "pandas (>=2.2.3,<3.0.0)",
+    "matplotlib (>=3.10.1,<4.0.0)",
+    "tqdm (>=4.67.1,<5.0.0)",
+    "scipy (>=1.15.2,<2.0.0)",
+    "pillow (>=11.2.1,<12.0.0)",
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

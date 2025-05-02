@@ -1,7 +1,7 @@
 # grain_analysis.py
 import cv2
 import numpy as np
-import smallestenclosingcircle as sec
+from utils import smallestenclosingcircle as sec
 import feret
 from math import pi, sin, cos
 

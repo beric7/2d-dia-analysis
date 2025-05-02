@@ -5,7 +5,6 @@ import numpy as np
 from utils.grain_analysis import compute_sphericity_all, compute_volume_simple, ellipsoidal_volume, compute_feret_diameters
 import feret
 import cv2
-from itertools import chain
 
 from concurrent.futures import ProcessPoolExecutor
 
