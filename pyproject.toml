@@ -17,6 +17,8 @@ dependencies = [
     "pillow (>=11.2.1,<12.0.0)",
     "plotly (>=6.0.1,<7.0.0)",
     "seaborn (>=0.13.2,<0.14.0)",
+    "jupyterlab (>=4.4.2,<5.0.0)",
+    "scikit-learn (>=1.6.1,<2.0.0)",
 ]
 
 

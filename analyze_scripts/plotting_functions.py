@@ -10,6 +10,8 @@ from scipy.stats import norm  # For Z-scores
 
 from utils.load_json import load_json_data
 
+import math
+
 # ################################################
 # Extract data for plotting
 # ################################################
@@ -156,10 +158,37 @@ def create_histograms(areas, feret_maxes, feret_mins, sphericities, touch_edges,
     axs[1, 0].hist(sphericities, bins=30, color='purple', alpha=0.7)
     axs[1, 0].set_title('Sphericities')
 
-    axs[1, 1].hist(ellip_volumes, bins=30, color='orange', alpha=0.7)
+    # Define bin edges for 30 bins between 0 and 1
+    bin_edges = np.linspace(0, 1, 31)  # 30 bins between 0 and 1
+    # Convert ellip_volumes to a NumPy array
+    ellip_volumes = np.array(ellip_volumes)
+
+    # Calculate histogram manually using numpy
+    hist, edges = np.histogram(ellip_volumes, bins=bin_edges)
+
+    # Handle overflow bin (values greater than 1)
+    overflow = np.sum(ellip_volumes > 1)  # Count values above 1
+
+    # Plot bar chart for histogram
+    axs[1, 1].bar(edges[:-1], hist, width=np.diff(edges), align='edge', color='orange', alpha=0.7, label='Data')
+    # Add overflow bin as a separate bar
+    axs[1, 1].bar(1, overflow, width=0.05, color='red', alpha=0.7, label='Overflow (values > 1)')
     axs[1, 1].set_title('Ellipsoid Volumes')
 
-    axs[1, 2].hist(volumes, bins=30, color='brown', alpha=0.7)
+    # Define bin edges for 30 bins between 0 and 1
+    bin_edges = np.linspace(0, 1, 31)  # 30 bins between 0 and 1
+    # Convert ellip_volumes to a NumPy array
+    volumes = np.array(volumes)
+
+    # Calculate histogram manually using numpy
+    hist, edges = np.histogram(volumes, bins=bin_edges)
+
+    # Handle overflow bin (values greater than 1)
+    overflow = np.sum(volumes > 1)  # Count values above 1
+
+    # Plot histogram using hist() function
+    axs[1, 2].bar(edges[:-1], hist, width=np.diff(edges), align='edge', color='brown', alpha=0.7, label='Data')
+    axs[1, 2].bar(1, overflow, width=0.05, color='red', alpha=0.7, label='Overflow (values > 1)')
     axs[1, 2].set_title('Volumes')
 
     # Calculate the aspect ratio
@@ -189,7 +218,7 @@ def create_histograms(areas, feret_maxes, feret_mins, sphericities, touch_edges,
         # sns.kdeplot(x=volumes, y=compactness, ax=axs[2, 1], cmap="viridis", fill=True, bw_adjust=0.5)
         # axs[2, 1].hexbin(x=volumes, y=compactness, gridsize=50, cmap="viridis")
         axs[2, 1].hist(compactness, bins=30, color='green', alpha=0.7)
-        axs[2, 1].set_title('Aspect Ratio')
+        axs[2, 1].set_title('Compactness')
         # axs[2, 1].set_title('Volumes // Compactness (Heatmap)')
         # axs[2, 1].set_xlabel('Volumes')
         # axs[2, 1].set_ylabel('Compactness')
@@ -220,10 +249,56 @@ def create_histograms(areas, feret_maxes, feret_mins, sphericities, touch_edges,
     # Save the figure as a PNG file
     plt.savefig(f'{save_dir}/histogram.png')
 
+
+def plot_aspectRatio_histograms_and_scatter(feret_mins, feret_maxes, save_dir, touch_edges):
+    # Define the bins for Feret minimum values
+    bins = [(0.01, 0.075), (0.075, 0.105), (0.105, 0.15), (0.15, 0.25), (0.25, 0.425), (0.425, 0.85)]
+    titles = [
+        'Aspect Ratio - 0.01mm to 0.075mm',
+        'Aspect Ratio - 0.075mm to 0.105mm',
+        'Aspect Ratio - 0.105mm to 0.15mm',
+        'Aspect Ratio - 0.15mm to 0.25mm',
+        'Aspect Ratio - 0.25mm to 0.425mm',
+        'Aspect Ratio - 0.425mm to 0.85mm'
+    ]
+    
+    # Create subplots: 2 rows (1 for histograms, 1 for scatter plots)
+    fig, axs = plt.subplots(2, len(bins), figsize=(20, 10))
+    fig.suptitle("Histograms and Scatter Plots of Particle Attributes")
+    
+    # Loop through each bin and calculate aspect ratios
+    for i, (lower, upper) in enumerate(bins):
+        # Filter data based on the current bin and exclude particles touching edges
+        bin_indices = [
+            j for j, min_val in enumerate(feret_mins) 
+            if lower <= min_val < upper and not touch_edges[j]
+        ]
+        bin_aspect_ratios = [feret_mins[j] / feret_maxes[j] for j in bin_indices]
+        bin_feret_mins = [feret_mins[j] for j in bin_indices]
+        bin_feret_maxes = [feret_maxes[j] for j in bin_indices]
+        
+        # Plot histogram for the current bin
+        axs[0, i].hist(bin_aspect_ratios, bins=30, color='blue', alpha=0.7)
+        axs[0, i].set_title(titles[i])
+        axs[0, i].set_xlabel('Aspect Ratio')
+        axs[0, i].set_ylabel('Frequency')
+        
+        # Plot scatter plot for the current bin
+        axs[1, i].scatter(bin_feret_mins, bin_feret_maxes, alpha=0.7, color='green')
+        axs[1, i].set_title(f'Feret Min vs Max - {titles[i]}')
+        axs[1, i].set_xlabel('Feret Min')
+        axs[1, i].set_ylabel('Feret Max')
+    
+    plt.tight_layout()
+    # Save the figure as a PNG file
+    plt.savefig(f'{save_dir}/histogram_and_scatter_aspect_ratios.png')
+    # plt.show()
+
 # Main function to execute the plotting
 def plot_data(json_file, save_dir, use_heatmap=True):
     coco_format = load_json_data(json_file)
     areas, feret_maxes, feret_mins, sphericities, touch_edges, volumes, ellip_volumes = extract_data(coco_format)
+    plot_aspectRatio_histograms_and_scatter(feret_mins, feret_maxes, save_dir, touch_edges)
     create_histograms(areas, feret_maxes, feret_mins, sphericities, touch_edges, volumes, ellip_volumes, save_dir, use_heatmap=use_heatmap)
 
 # ################################################

@@ -16,10 +16,10 @@ echo "Hosts: "$SLURM_NODELIST
 echo "------------"
 
 pixel_2_mm=0.00493177
-img_dir='/projects/OLIVINE/data/input_device/Oryx/oryx/venice/venice_all_long1_144fps'
-save_dir='/projects/OLIVINE/data/output/PARTICLE/Otsu/oryx/venice_long1/'
+img_dir='/projects/OLIVINE/data/input_device/Oryx/oryx/venice/venice_all_36fps'
+save_dir='/projects/OLIVINE/data/output/PARTICLE/Otsu/oryx/venice_all_36fps/'
 sand='Venice_Beach'
-exp='venice_beach_long1'
+exp='Venice_all_36fps'
 echo "Pixel Ratio: "$pixel_2_mm
 echo "save_dir: "$save_dir
 

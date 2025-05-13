@@ -2,7 +2,7 @@ import os
 import json
 import glob
 import numpy as np
-from utils.grain_analysis import compute_sphericity_all, compute_volume_simple, ellipsoidal_volume, compute_feret_diameters
+from grain_analysis_functions import compute_sphericity_all, compute_volume_simple, ellipsoidal_volume, compute_feret_diameters
 import feret
 import cv2
 
