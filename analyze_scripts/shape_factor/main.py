@@ -1,7 +1,6 @@
-import assign_asp
 from tqdm import tqdm
 import pandas as pd
-from shapefactor import (
+from .shapefactor import (
     assign_aspect_ratio_bin, calculate_aspect_ratio, derive_realistic_bounds,
     calculate_volume, calculate_shape_factor, estimate_dim3_with_shape_factor
 )
@@ -31,10 +30,12 @@ def apply_shapefactor(pop_data, bins, save_dir, exp_name):
         dim3_estimated = estimate_dim3_with_shape_factor(dim1, dim2, volume, shape_factor, lower_bound, upper_bound)
         
         # Calculate the true minimum dimension
-        true_min_dim = min(dim1, dim2)
+        true_min_dim = [dim1, dim2, dim3_estimated]
+        true_min_dim.sort()
+        true_min_dim = true_min_dim[1]
         
         # Calculate volume using estimated dimensions
-        estimated_volume = calculate_volume(dim1, dim2, dim1)
+        estimated_volume = calculate_volume(dim1, dim2, dim3_estimated)
         
         # Append results
         results.append({

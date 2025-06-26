@@ -16,10 +16,10 @@ echo "------------"
 
 # pixel_2_mm=0.0057537
 # pixel_2_mm=0.00493177
-exp='olivine_all_36fps_0.2_amodal'
+exp='Olivine_sieve-140_36fps_amodal'
 pixel_2_mm=0.00493177
-save_dir='/projects/OLIVINE/data/output/PARTICLE/Amodal/oryx/model_B/olivine_all_36fps_0.2'
-pred_dir='/projects/OLIVINE/data/output/PARTICLE/Amodal/oryx/model_B/olivine_all_36fps_0.2/olivine_all_36fps_0.2_Model_B'
+save_dir='/projects/OLIVINE/data/output/PARTICLE/Amodal/oryx/model_olivine/Olivine_sieve-140_36fps_amodal'
+pred_dir='/projects/OLIVINE/data/output/PARTICLE/Amodal/oryx/model_olivine/Olivine_sieve-140_36fps_amodal/Model_olivine'
 sand='Olivine'
 echo "Pixel Ratio: "$pixel_2_mm
 echo "save_dir: "$save_dir

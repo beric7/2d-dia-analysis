@@ -19,6 +19,9 @@ dependencies = [
     "seaborn (>=0.13.2,<0.14.0)",
     "jupyterlab (>=4.4.2,<5.0.0)",
     "scikit-learn (>=1.6.1,<2.0.0)",
+    "cartopy (>=0.24.1,<0.25.0)",
+    "geopandas (>=1.1.0,<2.0.0)",
+    "geodatasets (>=2024.8.0,<2025.0.0)",
 ]
 
 

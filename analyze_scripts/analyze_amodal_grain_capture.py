@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from plotting_functions import plot_experiment_data, calculate_percentiles, get_curve, get_gsd
-
+# @ josh look here
 def process_file(file, img_dir, save_grain_dir, pixel2mm, json_save_dir):
     filepath = os.path.join(img_dir, file)
     df = get_contour_df(filepath, save_grain_dir, pixel2mm)
@@ -31,7 +31,7 @@ def main():
     parser.add_argument('--save_dir', type=str, help='base save directory')
     parser.add_argument('--pixel2mm', type=float, help='PIXEL_TO_MM')
     parser.add_argument('--sand_name', type=str, help="options: " \
-    "South_High, North_Low, North_High, South_Low, Virginia_Beach, Venice_Beach, OGT,Olivine, Washington_State")
+    "South_High, North_Low, North_High, South_Low, Virginia_Beach, Venice_Beach, OGT, Olivine, Washington_State")
     parser.add_argument('--exp', type=str, help='experiment name')
     args = parser.parse_args()
 
@@ -42,7 +42,7 @@ def main():
     experiment_name = args.exp
     json_save_dir = f'{save_dir}/particles_json/'
     coco_json = f'{save_dir}/coco_formatted.json'
-    percent_values = [0.1, 0.16, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8, 0.84, 0.9]
+    percent_values = [0.01, 0.05, 0.1, 0.16, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8, 0.84, 0.9, 0.95, 0.99]
 
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)

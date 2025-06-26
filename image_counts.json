@@ -1,0 +1,114 @@
+{
+    "olivine_100_36fps_0.7x": {
+        "image_count": 2507,
+        "row_count": 119628
+    },
+    "olivine_140_36fps_0.7x": {
+        "image_count": 2498,
+        "row_count": 105156
+    },
+    "olivine_60_144fps_0.7x": {
+        "image_count": 10005,
+        "row_count": 181666
+    },
+    "olivine_all_144fps_0.7x": {
+        "image_count": 7073,
+        "row_count": 132873
+    },
+    "olivine_all_36fps": {
+        "image_count": 1772,
+        "row_count": 33162
+    },
+    "olivine_all_36fps_0.7x": {
+        "image_count": 1772,
+        "row_count": 33162
+    },
+    "olivine_for_training_0.75x": {
+        "image_count": 146,
+        "row_count": 2254
+    },
+    "olivine_for_training_0.7x": {
+        "image_count": 146,
+        "row_count": 2253
+    },
+    "olivine_long1": {
+        "image_count": 10034,
+        "row_count": 166871
+    },
+    "olivine_long1_48fps": {
+        "image_count": 3345,
+        "row_count": 55587
+    },
+    "olivine_long2": {
+        "image_count": 10015,
+        "row_count": 130841
+    },
+    "olivine_long2_48fps": {
+        "image_count": 3339,
+        "row_count": 43521
+    },
+    "olivine_long3": {
+        "image_count": 10044,
+        "row_count": 135764
+    },
+    "olivine_long3_48fps": {
+        "image_count": 3348,
+        "row_count": 45266
+    },
+    "olivine_training_0.7x": {
+        "image_count": 146,
+        "row_count": 2254
+    },
+    "venice_100_36fps_0.7x": {
+        "image_count": 0,
+        "row_count": 0
+    },
+    "venice_40_36fps": {
+        "image_count": 2382,
+        "row_count": 11830
+    },
+    "venice_40_36fps_0.7x": {
+        "image_count": 2382,
+        "row_count": 11830
+    },
+    "venice_60_36fps_0.7x": {
+        "image_count": 2508,
+        "row_count": 26395
+    },
+    "venice_all_36fps": {
+        "image_count": 2515,
+        "row_count": 58174
+    },
+    "venice_all_36fps_0.7x": {
+        "image_count": 2515,
+        "row_count": 58174
+    },
+    "venice_long1": {
+        "image_count": 9993,
+        "row_count": 83511
+    },
+    "venice_long2": {
+        "image_count": 9979,
+        "row_count": 45635
+    },
+    "venice_long3": {
+        "image_count": 9757,
+        "row_count": 31522
+    },
+    "venice_long_combined": {
+        "image_count": 0,
+        "row_count": 0
+    },
+    "washington_100_36fps_0.7x": {
+        "image_count": 2513,
+        "row_count": 137576
+    },
+    "washington_140_36fps_0.7x": {
+        "image_count": 2515,
+        "row_count": 156861
+    },
+    "washington_60_36fps_0.7x": {
+        "image_count": 2513,
+        "row_count": 38823
+    }
+}
