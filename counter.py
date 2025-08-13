@@ -56,12 +56,12 @@ def count_images_and_rows(parent_directory, output_file, amodal):
 
 if __name__ == "__main__":
     # Specify the parent directory containing the folders
-    parent_directory = "/projects/SSC-IMAGE-STITCHING/OLIVINE/data/output/PARTICLE/Amodal/oryx/model_B"
+    parent_directory = "/projects/SSC-IMAGE-STITCHING/OLIVINE/data/output/PARTICLE/Amodal/oryx/Model_olivine"
 
     amodal = True
     
     # Specify the output file name
-    output_file = "image_counts_amodal_exp_ssc.json"
+    output_file = "image_counts_amodal_exp_ssc_olivine.json"
     
     # Call the function
     count_images_and_rows(parent_directory, output_file, amodal)
