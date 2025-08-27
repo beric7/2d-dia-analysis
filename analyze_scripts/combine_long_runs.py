@@ -24,7 +24,7 @@ import pandas as pd
 from plotting_functions import get_curve, get_gsd, get_percent_passing
 
 # Directory to save results
-save_dir = '/projects/SSC-IMAGE-STITCHING/OLIVINE/data/output/PARTICLE/Amodal/oryx/model_B/'
+save_dir = '/path/to/save/directory/'
 # Name of the sand sample and experiment
 sand_name = 'Triton'
 experiment_name = 'Triton_amodal_144fps'
@@ -33,9 +33,9 @@ percent_values = [0.01, 0.05, 0.1, 0.16, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.7
 
 # Load annotation data from three parts of the experiment
 # /projects/SSC-IMAGE-STITCHING/OLIVINE/data/output/PARTICLE/Amodal/oryx/model_B/Triton/triton_part_1_144fps
-d1 = load_json_data(f'/projects/SSC-IMAGE-STITCHING/OLIVINE/data/output/PARTICLE/Amodal/oryx/model_B/Triton/triton_part_1_144fps/coco_formatted.json')
-d2 = load_json_data(f'/projects/SSC-IMAGE-STITCHING/OLIVINE/data/output/PARTICLE/Amodal/oryx/model_B/Triton/triton_part_2_144fps/coco_formatted.json')
-d3 = load_json_data(f'/projects/SSC-IMAGE-STITCHING/OLIVINE/data/output/PARTICLE/Amodal/oryx/model_B/Triton/triton_part_3_144fps/coco_formatted.json')
+d1 = load_json_data(f'/path/to/directory/triton_part_1_144fps/coco_formatted.json')
+d2 = load_json_data(f'/path/to/directory/triton_part_2_144fps/coco_formatted.json')
+d3 = load_json_data(f'/path/to/directory/triton_part_3_144fps/coco_formatted.json')
 
 # Convert loaded data to DataFrames
 df1 = pd.DataFrame(d1)
