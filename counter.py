@@ -4,7 +4,27 @@ from tqdm import tqdm
 import pandas as pd
 from analyze_scripts.utils.load_json import load_json_data
 
-def count_images_and_rows(parent_directory, output_file, amodal):
+def count_images_and_rows(
+    parent_directory: str,
+    output_file: str,
+    amodal: bool
+) -> None:
+    """
+    Count the number of image JSON files and annotation rows in each experiment folder.
+
+    Args:
+        parent_directory (str): Path to the parent directory containing experiment folders.
+        output_file (str): Path to the output JSON file for saving results.
+        amodal (bool): If True, use 'particles_json' subfolder and raw JSON data;
+                       if False, use 'individual_particles_json' and 'annotations' key.
+
+    Returns:
+        -> None
+
+    Output:
+        - Writes a JSON file mapping each folder to its image count and annotation row count.
+        - Prints the row count for each folder during processing.
+    """
     # Dictionary to store folder names, image counts, and row counts
     folder_data = {}
 
@@ -15,17 +35,17 @@ def count_images_and_rows(parent_directory, output_file, amodal):
     for folder_name in tqdm(sorted(folders), desc="Processing folders"):
         folder_path = os.path.join(parent_directory, folder_name)
         
-        # Path to the "individual_particles_json" subfolder
+        # Path to the subfolder containing particle JSON files
         if not amodal:
             subfolder_path = os.path.join(folder_path, "individual_particles_json")
         else:
             subfolder_path = os.path.join(folder_path, "particles_json")
         
-        # Count the number of image files in the subfolder
+        # Count the number of image JSON files in the subfolder
         if os.path.exists(subfolder_path) and os.path.isdir(subfolder_path):
             image_count = sum(
                 1 for file_name in os.listdir(subfolder_path)
-                if file_name.lower().endswith(('.json'))
+                if file_name.lower().endswith('.json')
             )
         else:
             image_count = 0
@@ -34,14 +54,14 @@ def count_images_and_rows(parent_directory, output_file, amodal):
             # Path to the "coco_formatted.json" file
             coco_file_path = os.path.join(folder_path, "coco_formatted.json")
             data = load_json_data(coco_file_path)
-            if not amodal: data = data['annotations']
+            if not amodal:
+                data = data['annotations']
             # Load the JSON file into a pandas DataFrame
             df = pd.DataFrame(data)
             row_count = len(df)  # Get the number of rows in the DataFrame
-        except:
+        except Exception:
             row_count = 0
         print(row_count)
-
 
         # Add the folder name, image count, and row count to the dictionary
         folder_data[folder_name] = {
@@ -53,16 +73,28 @@ def count_images_and_rows(parent_directory, output_file, amodal):
     with open(output_file, 'w') as file:
         json.dump(folder_data, file, indent=4)
 
+if __name__ == "__main__":
+    """
+    Script entry point.
+
+    Counts image JSON files and annotation rows in each experiment folder under the parent directory,
+    and saves the results to a JSON file.
+
+    Args:
+        None (uses hardcoded paths below)
+
+    Output:
+        - JSON file with image and row counts per folder.
+        - Prints row counts during processing.
+    """
 
 if __name__ == "__main__":
     # Specify the parent directory containing the folders
-    parent_directory = "/projects/SSC-IMAGE-STITCHING/OLIVINE/data/output/PARTICLE/Amodal/oryx/model_B"
-
-    amodal = True
+    parent_directory = "/path/"
     
     # Specify the output file name
-    output_file = "image_counts_amodal_exp_ssc.json"
+    output_file = "image_counts_amodal_triton.json"
     
     # Call the function
-    count_images_and_rows(parent_directory, output_file, amodal)
+    count_images_and_rows(parent_directory, output_file, True)
     print(f"Image counts saved to {output_file}")

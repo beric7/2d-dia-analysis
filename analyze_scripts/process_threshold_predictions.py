@@ -1,3 +1,5 @@
+# Copyright 2025 The MITRE Corporation
+
 import numpy as np
 
 # Custom Ostu Thresholding method

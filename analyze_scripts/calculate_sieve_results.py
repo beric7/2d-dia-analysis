@@ -1,6 +1,39 @@
-import pandas as pd
+# Copyright 2025 The MITRE Corporation
 
-def calculate_values(sieve_diameter, passage_percentage, target_value, all_passing_percentage, all_sieve_diameter):
+import pandas as pd
+from typing import List, Tuple, Optional
+
+def calculate_values(
+    sieve_diameter: List[float],
+    passage_percentage: List[float],
+    target_value: List[float],
+    all_passing_percentage: List[float],
+    all_sieve_diameter: List[float]
+) -> pd.DataFrame:
+    """
+    Calculate interpolation values for grain size analysis.
+
+    Args:
+        sieve_diameter (List[float]): Sieve diameters corresponding to the target values.
+        passage_percentage (List[float]): Percentages passing for each sieve diameter.
+        target_value (List[float]): Target percent passing values for interpolation.
+        all_passing_percentage (List[float]): All available percent passing values from the dataset.
+        all_sieve_diameter (List[float]): All available sieve diameters from the dataset.
+
+    Returns:
+        -> pd.DataFrame: DataFrame containing calculated rates, interpolated x values, and ground truth sizes.
+
+    Output:
+        DataFrame with columns:
+            - passage_percentage
+            - rate
+            - percentage passing
+            - start_value
+            - sieve_value
+            - x
+            - x+sv
+            - ground truth size
+    """
     # Initialize lists to store calculated values
     rates = []
     x_values = []
@@ -16,14 +49,13 @@ def calculate_values(sieve_diameter, passage_percentage, target_value, all_passi
         sv1 = all_sieve_diameter[sv_index-1]
         sv2 = all_sieve_diameter[sv_index]
         rate = (pp2 - pp1) / (sv2 - sv1)
-        # rate = (tv - pp) / sv
         rates.append(rate)
 
-        # Calculate x
+        # Calculate x (interpolated diameter)
         x = (tv - pp) / rate
         x_values.append(x)
 
-        # Calculate x + sieve_value
+        # Calculate x + sieve_value (final interpolated size)
         x_plus_sv = x + sv
         x_plus_sv_values.append(x_plus_sv)
 
@@ -41,27 +73,45 @@ def calculate_values(sieve_diameter, passage_percentage, target_value, all_passi
 
     return df
 
+def get_results(
+    name: str,
+    target_value: Optional[List[float]] = None
+) -> Optional[Tuple[pd.DataFrame, pd.DataFrame]]:
+    """
+    Retrieve and interpolate sieve results for a given sand sample.
 
-def get_results(name, target_value=[.10, .16, .20, .25, .30, .40, .50, .60, .70, .75, .80, .84, .90]):
+    Args:
+        name (str): Name of the sand sample (must match a column in the summary CSV).
+        target_value (Optional[List[float]]): List of target percent passing values (default is standard percentiles).
+
+    Returns:
+        -> Optional[Tuple[pd.DataFrame, pd.DataFrame]]:
+            - pd.DataFrame: DataFrame with interpolated ground truth sizes for each target value.
+            - pd.DataFrame: Raw DataFrame loaded from the summary CSV.
+
+    Output:
+        Saves no files directly. Returns DataFrames for further use.
+    """
     summary = '/projects/OLIVINE/data/sieve_results/Sieve Result Summary.csv'
-    target_value = target_value
+    if target_value is None:
+        target_value = [.10, .16, .20, .25, .30, .40, .50, .60, .70, .75, .80, .84, .90]
 
     tmp_df = pd.read_csv(summary)
     try:
         all_passing_percentage = list(tmp_df[name] / 100)
         all_sieve_diameter = list(tmp_df['Sieve Diameter'])
-    except:
+    except Exception:
         print(f"{name} not found!")
-        return
-    # Empty lists for generated data.
+        return None
+
+    # Find the lower bound passage percentage and corresponding sieve diameter for each target value
     sieve_diameter = []
     passage_percentage = []
-    # Generates passage_percentage and sieve diameter when given target value, all_passing_percentage, all_sieve_diameter
     for val in target_value:
         low_pp = None
         for percen in reversed(all_passing_percentage):
             if percen < val:
-                if low_pp == None:
+                if low_pp is None:
                     low_pp = percen
                 else:
                     if percen > low_pp:
@@ -73,14 +123,27 @@ def get_results(name, target_value=[.10, .16, .20, .25, .30, .40, .50, .60, .70,
     # Calculate values and get the DataFrame.
     df = calculate_values(sieve_diameter, passage_percentage, target_value, all_passing_percentage, all_sieve_diameter)
 
-    # Display the table.
     return df, tmp_df
 
 # --------------------------------------- #
 # Use case:
 # --------------------------------------- #
-for name in ["South_High", "North_Low", "North_High", "South_Low", "Virginia_Beach", "Venice_Beach", "OGT","Olivine", "Washington_State"]:
-    sand_name = name
-    result_df, _ = get_results(sand_name)
-    result_df = result_df[['percentage passing', 'ground truth size']]
-    result_df.to_csv(f'/projects/OLIVINE/data/sieve_results/{sand_name}.csv', index=False)
+if __name__ == "__main__":
+    """
+    Example use case: For each sand sample, calculate and save ground truth sieve results.
+
+    Output:
+        Saves a CSV file for each sand sample with columns:
+            - percentage passing
+            - ground truth size
+    """
+    for name in [
+        "South_High", "North_Low", "North_High", "South_Low",
+        "Virginia_Beach", "Venice_Beach", "OGT", "Olivine", "Washington_State"
+    ]:
+        sand_name = name
+        result = get_results(sand_name)
+        if result is not None:
+            result_df, _ = result
+            result_df = result_df[['percentage passing', 'ground truth size']]
+            result_df.to_csv(f'/projects/OLIVINE/data/sieve_results/{sand_name}.csv', index=False)
