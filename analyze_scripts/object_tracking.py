@@ -1,3 +1,5 @@
+# Copyright 2025 The MITRE Corporation
+
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt

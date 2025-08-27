@@ -1,9 +1,10 @@
+# Copyright 2025 The MITRE Corporation
+
 import os
 import json
 import glob
 import numpy as np
 from grain_analysis_functions import compute_sphericity_all, compute_volume_simple, ellipsoidal_volume, compute_feret_diameters
-import feret
 import cv2
 
 from concurrent.futures import ProcessPoolExecutor

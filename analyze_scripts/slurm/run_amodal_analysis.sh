@@ -14,15 +14,15 @@ echo "Job Account: "$SLURM_JOB_ACCOUNT
 echo "Hosts: "$SLURM_NODELIST
 echo "------------"
 
-exp='Olivine_sieve-140_36fps_amodal'
+exp='triton_144fps_amodal'
 pixel_2_mm=0.00493177
-save_dir='/path/to/directory/model_olivine/Olivine_sieve-140_36fps_amodal'
-pred_dir='/path/to/directory/model_olivine/Olivine_sieve-140_36fps_amodal/Model_olivine'
-sand='Olivine'
+save_dir='/path/to/directory/'
+pred_dir='/path/to/directory/'
+sand='Triton'
 echo "Pixel Ratio: "$pixel_2_mm
 echo "save_dir: "$save_dir
 
-source /path/to/environment/bin/activate
+# source /path/to/environment/bin/activate
 
 python3 -m analyze_amodal_grain_capture --save_dir $save_dir --pred_dir $pred_dir --pixel2mm $pixel_2_mm --sand_name $sand --exp $exp
 

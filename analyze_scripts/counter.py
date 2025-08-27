@@ -1,3 +1,5 @@
+# Copyright 2025 The MITRE Corporation
+
 import os
 import json
 from tqdm import tqdm
@@ -87,14 +89,11 @@ if __name__ == "__main__":
         - JSON file with image and row counts per folder.
         - Prints row counts during processing.
     """
-
-if __name__ == "__main__":
     # Specify the parent directory containing the folders
-    parent_directory = "/path/"
-    
+    parent_directory = "path/to/directory/"
+    amodal = True
     # Specify the output file name
-    output_file = "image_counts_amodal_triton.json"
-    
+    output_file = "image_counts_amodal_exp_ssc_olivine.json"
     # Call the function
-    count_images_and_rows(parent_directory, output_file, True)
+    count_images_and_rows(parent_directory, output_file, amodal)
     print(f"Image counts saved to {output_file}")
