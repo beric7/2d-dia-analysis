@@ -1,3 +1,10 @@
+# 2D DIA Prototype System
+
+## Component overlays
+
+![alt text](media/system.png "system")
+
+
 # Grain Size Analysis Pipeline
 
 This repository contains scripts and workflows for analyzing sand grain size distributions using image-based methods and comparing results to ground truth sieve data. The code supports data aggregation, outlier removal, grain size distribution (GSD) curve computation, and ground truth comparison, with support for both real and synthetic data.
@@ -24,19 +31,19 @@ This pipeline enables:
 - Analysis of synthetic and amodal segmentation data.
 - Scalable processing via SLURM job scripts for high-throughput experiments.
 
-## Directory Structure
-
 ## Scripts
 
 The repository includes the following main scripts and modules:
 
-- **analyze_amodal_grain_capture**: Aggregates and analyzes grain size distributions from amodal segmentation predictions.
-- **analyze_threshold_grain_capture**: Processes grain size distributions using threshold-based segmentation.
-- **process_threshold_grain_capture**: Alternative threshold-based analysis pipeline.
-- **analyze_synth_grain**: Analyzes synthetic data using COCO-format JSON annotations.
-- **utils/load_json.py**: Utility functions for loading COCO-format JSON annotation files.
-- **plotting_functions.py**: Functions for computing grain size distributions, percent passing, and plotting GSD curves.
-- **sieve_ground_truth.py**: Script for interpolating and saving ground truth sieve results for each sand sample.
+- `analyze_amodal_grain_capture.py`: Aggregates and analyzes grain size distributions from amodal segmentation predictions.
+- `analyze_threshold_grain_capture.py`: Processes and analyzes grain size distributions using threshold-based segmentation.
+- `process_threshold_grain_capture.py`: Alternative threshold-based analysis pipeline.
+- `analyze_synth_grain.py`: Analyzes synthetic data using COCO-format JSON annotations.
+- `utils/load_json.py`: Utility functions for loading COCO-format JSON annotation files.
+- `plotting_functions.py`: Functions for computing grain size distributions, percent passing, and plotting GSD curves.
+- `sieve_ground_truth.py`: Script for interpolating and saving ground truth sieve results for each sand sample.
+- `counter.py`: Gets the number of individual grains observed, and the number of frames captured. 
+- `combine_multiple_captures.py`: Combines multiple data collections to get the aggregated GSD and other characteristics.  
 
 See the individual script docstrings for details on arguments and workflow.
 
@@ -129,6 +136,4 @@ Or open an issue on [GitHub](https://github.com/your-repo/grain-size-analysis/is
 **Copyright 2025 The MITRE Corporation**
 
 ---
-
-Let me know if you want more details for any section, or help with installation instructions, troubleshooting, or contributing guidelines!
 
