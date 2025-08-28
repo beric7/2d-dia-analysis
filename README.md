@@ -1,3 +1,12 @@
+# 2D DIA Prototype System
+
+## Component overlays
+
+Component overlays            |  Sand collection
+:-------------------------:|:-------------------------:
+![alt text](media/system.png "system")  |  ![alt text](media/collection.mp4 "system")
+
+
 # Grain Size Analysis Pipeline
 
 This repository contains scripts and workflows for analyzing sand grain size distributions using image-based methods and comparing results to ground truth sieve data. The code supports data aggregation, outlier removal, grain size distribution (GSD) curve computation, and ground truth comparison, with support for both real and synthetic data.
