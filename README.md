@@ -135,5 +135,7 @@ Or open an issue on [GitHub](https://github.com/your-repo/grain-size-analysis/is
 
 **Copyright 2025 The MITRE Corporation**
 
+This project contains content developed by The MITRE Corporation. If this code is used in a deployment or embedded within another project, it is requested that you send an email to opensource@mitre.org in order to let us know where this software is being used.
+
 ---
 
