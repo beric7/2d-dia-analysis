@@ -2,9 +2,7 @@
 
 ## Component overlays
 
-Component overlays            |  Sand collection
-:-------------------------:|:-------------------------:
-![alt text](media/system.png "system")  |  ![alt text](media/collection.mp4 "system")
+![alt text](media/system.png "system")
 
 
 # Grain Size Analysis Pipeline
