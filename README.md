@@ -4,6 +4,8 @@
 
 ![alt text](media/system.png "system")
 
+## To Train AIS-FORMER for particles follow-on in our repo: 
+![Here](https://github.com/beric7/2d-dia-aisformer)
 
 # Grain Size Analysis Pipeline
 
@@ -12,7 +14,6 @@ This repository contains scripts and workflows for analyzing sand grain size dis
 ## Table of Contents
 
 - [Overview](#overview)
-- [Directory Structure](#directory-structure)
 - [Scripts](#scripts)
 - [SLURM Job Submission](#slurm-job-submission)
 - [Example Usage](#example-usage)
